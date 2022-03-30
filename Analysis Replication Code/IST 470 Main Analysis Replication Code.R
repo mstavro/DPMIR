@@ -2,7 +2,7 @@
 ## 3.19.2022
 ## IST 470 UPDATED ANALYSES
 rm(list=ls())
-packages <- c("jmv", "readr", "MASS", "dplyr", "brant", "ordinal", "dotwhisker", "stargazer", "ggthemes", "googleVis", "DAMisc")
+packages <- c("jmv", "readr", "MASS", "dplyr", "brant", "ordinal", "dotwhisker", "stargazer", "ggthemes", "googleVis", "DAMisc", "lattice")
 if (length(setdiff(packages, rownames(installed.packages()))) > 0)
 {
   install.packages(setdiff(packages, rownames(installed.packages())), repos="https://cran.rstudio.com/")
@@ -169,7 +169,35 @@ plot(linear_model1)
 ## for presenting ordinal regression results need maximal first differences
 maximaldiffs <- ordChange(olr1, data = data)
 maximaldiffs
-oc2plot(maximaldiffs)
+
+## oc2plot will print the plot incorrectly as it starts the X scale at 1
+## however, the DV starts at 0
+## below is a rewritten version of oc2plot function to correct for the issue
+oc2plotadjusted <- function (ordc, plot = TRUE) 
+{
+  tmpdat <- data.frame(var = rep(rownames(ordc$diffs$mean), 
+                                 ncol(ordc$diffs$mean)), lev = rep(colnames(ordc$diffs$mean), 
+                                                                   each = nrow(ordc$diffs$mean)), mean = c(ordc$diffs$mean), 
+                       lower = c(ordc$diffs$lower), upper = c(ordc$diffs$upper), 
+                       stringsAsFactors = TRUE)
+  p1 <- xyplot(mean ~ lev | var, data = tmpdat, xlab = "", 
+               ylab = "Predicted Change in Pr(y=m)", lower = tmpdat$lower, 
+               upper = tmpdat$upper, panel = function(x, y, subscripts, 
+                                                      lower, upper, ...) {
+                 panel.abline(h = 0, lty = 2)
+                 panel.arrows(x, lower[subscripts], x, upper[subscripts], 
+                              angle = 90, length = 0.05, code = 3)
+                 panel.points(x, y, pch = 16, cex = 0.75, col = "black")
+               }, prepanel = prepanel.ci, scales=list(x=list(labels=c(1,1,3,5,7))))
+  if (plot) {
+    return(p1)
+  }
+  else {
+    return(tmpdat)
+  }
+}
+
+oc2plotadjusted(maximaldiffs)
 maxdiffs_tibble <- as_tibble(oc2plot(maximaldiffs, plot = FALSE))
 maxdiffs_tibble <- maxdiffs_tibble %>% arrange(var)
 
