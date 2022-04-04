@@ -4,6 +4,7 @@ Replication data for the paper "Do Not Resist: How Police Militarization Increas
 ### How to Run Replications
 A lot of the code is designed to be plug and play in R or R Studio, making use of the file.choose() command instead of setting a working directory and accessing the files directly.
 - IST 470 Project Analysis Script.R uses IST 470 and SURF Data for Analysis.csv
+- Secondary analysis using Fariss' (2014) latent variable contains the script and data in the same file under code for analyses
 
 Alternatively, jamovi can be used. jamovi contains both the dataset and analyses in one integrated statistical environment, similar to IBM's SPSS or Stata. jamovi can be downloaded <a href="https://www.jamovi.org">here.</a>
 ### License Information
