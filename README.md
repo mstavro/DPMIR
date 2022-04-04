@@ -7,7 +7,7 @@ A lot of the code is designed to be plug and play in R or R Studio, making use o
 - Secondary analysis using Fariss' (2014) latent variable contains the script and data in the same file under code for analyses
 
 ### Files Output by Analysis Code
-Note: the analysis code will output several files in .html format. These files will be saved to the working directory. If you would like these files to be saved elsewhere, _be sure to change the working directory before running the code_. The code uses file.choose() instead of setting a working directory outright.__
+Note: the analysis code will output several files in .html format. These files will be saved to the working directory. If you would like these files to be saved elsewhere, _be sure to change the working directory before running the code_. The code uses file.choose() instead of setting a working directory outright.
 
 Alternatively, jamovi can be used. jamovi contains both the dataset and analyses in one integrated statistical environment, similar to IBM's SPSS or Stata. jamovi can be downloaded <a href="https://www.jamovi.org">here.</a>
 ### License Information
