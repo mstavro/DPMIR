@@ -13,7 +13,8 @@ options(stringsAsFactors=FALSE)
 options(scipen=999)
 set.seed(33603)
 
-## choose the dataset
+## select the file called "IST 470 and SURF Data for Analysis.csv" from 
+## GitHub repo/zip folder
 data <- read_csv(file.choose())
 
 ## obtain descriptive statistics on variables of interest
