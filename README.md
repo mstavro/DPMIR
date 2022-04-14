@@ -1,5 +1,5 @@
-# Repository for Replication of "Do Not Resist: How Police Militarization..."
-Replication data for the paper "Do Not Resist: How Police Militarization Increased Repression’s Likelihood Across 98 Countries."
+# Repository for Replication of "Do Not Resist: How Police Militarization Increases Repression"
+Replication data for the paper "Do Not Resist: How Police Militarization Increases Repression"
 
 ### How to Run Replications
 A lot of the code is designed to be plug and play in R or R Studio, making use of the file.choose() command instead of setting a working directory and accessing the files directly.
