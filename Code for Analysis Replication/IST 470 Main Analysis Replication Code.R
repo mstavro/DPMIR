@@ -94,6 +94,9 @@ McF.pr2 <- 1 - (clm1$logLik / clm0$logLik)
 ## plot the comparison of partial proportional odds
 write(stargazer(olr2, olr1, clm1, type = "html"), "IST470_OrdinalPlots_CLMCompare.html")
 
+## report ONLY the odds ratios
+stargazer(olr2, olr1, clm1, type = "html", apply.coef = exp, report = "vc", omit.table.layout = "n", out = "stargazer_oddsratios.html")
+
 ## linear regression analysis to check for robustness against statistical models
 linReg(
   data = data,
@@ -162,7 +165,30 @@ summary(linear_modelaux)
 write(stargazer(linear_modelaux, type = "html"), "ProtestsPM.html")
 
 ## violin plot to open up the analysis discussion section
-ggplot(data = data, aes(x = police, y = repress_index, group = police)) + geom_violin(orientation = "x") + scale_x_continuous(breaks = c(0,1), labels = c("No Police Militarization", "Police Militarization")) + scale_y_continuous(breaks = c(0:8)) + xlab("Police Militarization") + ylab("Repression Index (Inverted CIRI Index)") + stat_summary(fun = "median", geom = "point") + theme_tufte() + theme(axis.title.y = element_text(vjust = 2))
+theme_custom <- function (base_size = 12, color = "white", base_family = "sans", 
+                          title_family = "sans") 
+{
+  colorhex <- ggthemes::ggthemes_data$wsj$bg[color]
+  theme_foundation(base_size = base_size, base_family = base_family) + 
+    theme(line = element_line(linetype = 1, colour = "black"), 
+          rect = element_rect(fill = colorhex, linetype = 0, 
+                              colour = NA), text = element_text(colour = "black"), 
+          title = element_text(family = title_family, size = rel(1.03)), 
+          axis.title = element_blank(), axis.text = element_text( 
+            size = rel(1)), axis.text.x = element_text(colour = NULL), 
+          axis.text.y = element_text(colour = NULL), axis.ticks = element_line(colour = NULL), 
+          axis.ticks.y = element_blank(), axis.ticks.x = element_line(colour = NULL), 
+          axis.line = element_line(), axis.line.y = element_blank(), 
+          legend.background = element_rect(), legend.position = "top", 
+          legend.direction = "horizontal", legend.box = "vertical", 
+          panel.grid = element_line(colour = NULL, linetype = 3), 
+          panel.grid.major = element_line(colour = "black"), 
+          panel.grid.major.x = element_blank(), panel.grid.minor = element_blank(), 
+          plot.title = element_text(hjust = 0, face = "bold"), 
+          plot.margin = unit(c(1, 1, 1, 1), "lines"), 
+          strip.background = element_rect())
+}
+ggplot(data = data, aes(x = police, y = repress_index, group = police)) + geom_violin(orientation = "x") + scale_x_continuous(breaks = c(0,1), labels = c("No Police Militarization", "Police Militarization")) + scale_y_continuous(breaks = c(0:8)) + xlab("Police Militarization") + ylab("Repression Index (Inverted CIRI Index)") + stat_summary(fun = "median", geom = "point") + theme_custom() + theme(axis.title.y = element_text(vjust = 3))
 
 ## diagnostic plots lin reg
 plot(linear_model1)
@@ -201,4 +227,3 @@ oc2plotadjusted <- function (ordc, plot = TRUE)
 oc2plotadjusted(maximaldiffs)
 maxdiffs_tibble <- as_tibble(oc2plot(maximaldiffs, plot = FALSE))
 maxdiffs_tibble <- maxdiffs_tibble %>% arrange(var)
-
