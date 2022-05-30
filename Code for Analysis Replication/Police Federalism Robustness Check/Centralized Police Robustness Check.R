@@ -1,5 +1,6 @@
-## federalism robustness check - remove countries who have provinces with
-## authority over taxing/spending/legislating per DPI
+## subpolice robustness check
+## run the logit on countries only with centralized police control
+
 rm(list=ls())
 packages <- c("readr", "MASS", "dplyr", "brant", "ordinal", "stargazer", "DAMisc", "lattice")
 if (length(setdiff(packages, rownames(installed.packages()))) > 0)
@@ -12,18 +13,18 @@ options(stringsAsFactors=FALSE)
 options(scipen=999)
 set.seed(33603)
 
-## choose data and filter all federal countries and countries
-## with autonomous regions out
-dpidata <- read_csv(file.choose())
-dpidata <- dpidata %>% filter(author == 0 & auton == 0)
+## load subpolice and filter s.t. all cases on subpolice = 0
+## subpolice 0 = full centralized authority over police
+subpol <- read_csv(file.choose())
+subpol <- subpol %>% filter(subpolice_IDC == 0)
 
-olr1 <- polr(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + trade_WDI + repress_index_lagged + polity2_P4 + pop_WDI_log10 + lji_LS, data = dpidata, method = "logistic")
+olr1 <- polr(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + trade_WDI + repress_index_lagged + polity2_P4 + pop_WDI_log10 + lji_LS, data = subpol, method = "logistic")
 summary(olr1)
-olr2 <- polr(as.factor(repress_index) ~ police, data = dpidata, method = "logistic")
+olr2 <- polr(as.factor(repress_index) ~ police, data = subpol, method = "logistic")
 summary(olr2)
-stargazer(olr2, olr1, out = "Robustness Test Using Centralized States Only.html")
+stargazer(olr2, olr1, out = "Robustness Test Using Centralized Police Only.html")
 
-maximaldiffs <- ordChange(olr1, data = dpidata)
+maximaldiffs <- ordChange(olr1, data = subpol)
 maximaldiffs
 
 ## oc2plot will print the plot incorrectly as it starts the X scale at 1
