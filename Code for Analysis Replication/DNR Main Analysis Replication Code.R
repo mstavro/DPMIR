@@ -13,7 +13,7 @@ options(stringsAsFactors=FALSE)
 options(scipen=999)
 set.seed(33603)
 
-## select the file called "IST 470 and SURF Data for Analysis.csv" from 
+## select the DNR Main Analysis file from 
 ## GitHub repo/zip folder
 data <- read_csv(file.choose())
 
@@ -130,6 +130,9 @@ summary(linear_model1)
 
 ## output regression table as HTML
 write(stargazer(linear_model0, linear_model1, type = "html"), "PMRepressionLinReg.html")
+
+## output all the main models as html
+stargazer(linear_model1, olr1, clm1, type = "html", out = "DNR_MainModels.html")
 
 ## create plot of linear regression coefficients for model w/ controls
 windowsFonts(TNR = windowsFont("Times New Roman"))
