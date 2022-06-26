@@ -134,6 +134,12 @@ write(stargazer(linear_model0, linear_model1, type = "html"), "PMRepressionLinRe
 ## output all the main models as html
 stargazer(linear_model1, olr1, clm1, type = "html", out = "DNR_MainModels.html")
 
+## create corresponding odds ratio table for above
+stargazer(olr1, clm1, type = "html", apply.coef = exp, report = "vc", omit.table.layout = "n", out = "DNRMainModels_Odds.html")
+
+## present uncontrolled models for appendix
+stargazer(linear_model0, olr2, type = "html", out = "DNR_NoControls.html")
+
 ## create plot of linear regression coefficients for model w/ controls
 windowsFonts(TNR = windowsFont("Times New Roman"))
 
