@@ -17,4 +17,4 @@ jamovi provides an easy way for users not familiar with R to review the procedur
 jamovi analyses are also viewable in R syntax mode. The syntax from jamovi is included in the main replication script.
 
 ### License Information
-Replication files are provided under a GNU General Public License v3.0. This work can be freely shared and modified; any publications of modifications to replication should be done under a GNU GPL v3.0 license.
+Replication files are provided under a GNU General Public License v3.0 (out of caution for any copyleft licensing contained in packages used). This work can be freely shared and modified; any publications of modifications to replication should be done under a GNU GPL v3.0 license.
