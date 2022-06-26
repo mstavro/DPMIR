@@ -1,10 +1,19 @@
 # Repository for Replication of "Do Not Resist: How Police Militarization Increases Repression"
 Replication data for the paper "Do Not Resist: How Police Militarization Increases Repression"
 
+### Folder and File Descriptions
+#### Main Replication Files
+Contains the R script and dataset required to replicate the main results of the paper.
+#### Robustness Tests
+Contains subfolders which house the files required to run robustness tests (ex. PTS substitution for CIRI).
+#### Unfiltered Data and Descriptives
+Houses the central dataset prior to any filtering/variable selection along with an R script to obtain descriptives.
+#### Jamovi Replication File
+Provides a .omv file that contains the dataset in jamovi as well as some analyses. Provided for interested parties who would like to work with a graphical interface (similar to IBM SPSS) instead of R code.
+
 ### How to Run Replications
 A lot of the code is designed to be plug and play in R or R Studio, making use of the file.choose() command instead of setting a working directory and accessing the files directly.
-- The DNR main analysis script uses DNR Data for Main Analysis.csv
-- Secondary analysis using Fariss' (2014) latent variable contains the script and data in the same file under code for analyses
+- Navigate to the "Main Replication Files" folder, open the R script, and use the file explorer window to choose the accompanying .csv file
 
 ### Files Output by Analysis Code
 Note: the analysis code will output several files in .html format. These files will be saved to the working directory. If you would like these files to be saved elsewhere, _be sure to change the working directory before running the code_. The code uses file.choose() instead of setting a working directory outright.
