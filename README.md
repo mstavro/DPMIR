@@ -5,7 +5,7 @@ Replication data for the paper "Do Not Resist: How Police Militarization Increas
 #### Main Replication Files
 Contains the R script and dataset required to replicate the main results of the paper.
 #### CIRI Component Replication Files
-Contains the R script and full data required to replicate the component results in the paper.
+Contains the R script and full data required to replicate the component results (ordered logit on torture, killing, disappearances, political imprisonment) in the paper.
 #### Robustness Tests
 Contains subfolders which house the files required to run robustness tests (ex. PTS substitution for CIRI).
 #### Unfiltered Data and Descriptives
