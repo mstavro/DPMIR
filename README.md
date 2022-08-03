@@ -1,5 +1,5 @@
-# Repository for Replication of "Do Not Resist: How Police Militarization Increases Repression"
-Replication data for the paper "Do Not Resist: How Police Militarization Increases Repression"
+# Repository for Replication of "Does Police Militarization Increase Repression?"
+Replication data for the paper "Does Police Militarization Increase Repression?"
 
 ### Folder and File Descriptions
 #### Main Replication Files
