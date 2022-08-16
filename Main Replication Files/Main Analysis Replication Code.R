@@ -1,6 +1,6 @@
 ## MARTIN STAVRO
-## 3.19.2022
-## IST 470 UPDATED ANALYSES
+## 8.16.22
+## DPMIR Main Analyses
 rm(list=ls())
 packages <- c("jmv", "readr", "MASS", "dplyr", "brant", "ordinal", "dotwhisker", "stargazer", "ggthemes", "googleVis", "DAMisc", "lattice")
 if (length(setdiff(packages, rownames(installed.packages()))) > 0)
@@ -13,60 +13,19 @@ options(stringsAsFactors=FALSE)
 options(scipen=999)
 set.seed(33603)
 
-## select the DNR Main Analysis file from 
+## select the DPMIR Main Data file from 
 ## GitHub repo/zip folder
 data <- read_csv(file.choose())
 
-## obtain descriptive statistics on variables of interest
-descriptives(
-  data = data,
-  vars = vars(year, police, polity2_P4, gdp_WDI_log10, pop_WDI_log10, cameo_protests, trade_WDI, lji_LS, repress_index, repress_index_lagged),
-  freq = TRUE,
-  desc = "rows")
+## how many countries and what period of time?
+data2 <- data %>% select(police, repress_index_lagged, usaidoblige_log, hasNHRI, cameo_protests, pop_WDI_log10, polity2_P4, gdp_WDI_log10, lji_LS, ifs, year)
+data3 <- na.omit(data2)
+n_distinct(data3$ifs)
+range(data3$year)
 
-descriptives(
-  formula = repress_index ~ police,
-  data = data,
-  desc = "rows")
-
-## OK, we know our analysis spans from 1994 - 2010, but how many countries?
-n_distinct(data$cowcode)
-
-## 98 unique countries; let's make a nice map to show our readers
-## note, this will save the map as an html file.
-G1 <- gvisGeoChart(data = data, locationvar = 'geocode')
-print(G1, file = "gmap.html")
-
-## ordered logit analysis
-logRegOrd(
-  data = data,
-  dep = repress_index,
-  covs = vars(gdp_WDI_log10, polity2_P4, pop_WDI_log10, cameo_protests, lji_LS, trade_WDI, repress_index_lagged),
-  factors = police,
-  blocks = list(
-    list(
-      "police"),
-    list(
-      "repress_index_lagged",
-      "trade_WDI",
-      "lji_LS",
-      "cameo_protests",
-      "pop_WDI_log10",
-      "polity2_P4",
-      "gdp_WDI_log10")),
-  refLevels = list(
-    list(
-      var="police",
-      ref="0")),
-  modelTest = TRUE,
-  OR = TRUE)
-
-## run polr() from MASS package to verify JMV analyses and to Brant Test
-olr1 <- polr(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + trade_WDI + repress_index_lagged + polity2_P4 + pop_WDI_log10 + lji_LS, data = data, method = "logistic")
+## ordered logit
+olr1 <- polr(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + usaidoblige_log + hasNHRI + repress_index_lagged + polity2_P4 + pop_WDI_log10 + lji_LS, data = data, method = "logistic")
 summary(olr1)
-
-## retrieve # of obsv
-olr1$nobs
 
 ## check the first model with just police
 olr2 <- polr(as.factor(repress_index) ~ police, data = data, method = "logistic")
@@ -75,55 +34,33 @@ summary(olr2)
 ## produce stargazer tables
 write(stargazer(olr2, olr1, type = "html"), "OrdinalTablesIST470.html")
 
-## retrieve observations
-olr2$nobs
-
 ## assumption test: parallel regression (proportional odds) Brant Test
 brant(olr1)
 
 ## parallel regression / proportional odds assumption violated
 ## test on clm() package as a generalized ordinal logit / partial
 ## proportional odds model
-clm1 <- clm(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + trade_WDI + repress_index_lagged + pop_WDI_log10 + polity2_P4, nominal = ~ lji_LS, data = data)
-summary(clm1)
+clm1 <- clm(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + usaidoblige_log + repress_index_lagged + polity2_P4, nominal = ~ lji_LS + pop_WDI_log10, data = data)
+clm1$convergence
+
+## invalid fit, mean center
+data <- data %>% mutate(pop_mc = pop_WDI_log10 - mean(pop_WDI_log10, na.rm = TRUE))
+data <- data %>% mutate(gdp_mc = gdp_WDI_log10 - mean(gdp_WDI_log10, na.rm = TRUE))
+clm1 <- clm(as.factor(repress_index) ~ police + gdp_mc + cameo_protests + usaidoblige_log + repress_index_lagged + polity2_P4, nominal = ~ lji_LS + pop_mc, data = data)
 
 ## obtain McFadden's R for clm
 clm0 <- clm(as.factor(repress_index) ~ 1, data = data)
 McF.pr2 <- 1 - (clm1$logLik / clm0$logLik)
 
 ## plot the comparison of partial proportional odds
-write(stargazer(olr2, olr1, clm1, type = "html"), "IST470_OrdinalPlots_CLMCompare.html")
+write(stargazer(olr2, olr1, clm1, type = "html"), "DPMIR Ordinal CLM Compare.html")
 
 ## report ONLY the odds ratios
 stargazer(olr2, olr1, clm1, type = "html", apply.coef = exp, report = "vc", omit.table.layout = "n", out = "stargazer_oddsratios.html")
 
-## linear regression analysis to check for robustness against statistical models
-linReg(
-  data = data,
-  dep = repress_index,
-  covs = vars(polity2_P4, gdp_WDI_log10, pop_WDI_log10, cameo_protests, trade_WDI, lji_LS, repress_index_lagged),
-  factors = police,
-  blocks = list(
-    list(
-      "police"),
-    list(
-      "repress_index_lagged",
-      "lji_LS",
-      "trade_WDI",
-      "cameo_protests",
-      "pop_WDI_log10",
-      "gdp_WDI_log10",
-      "polity2_P4")),
-  refLevels = list(
-    list(
-      var="police",
-      ref="0")),
-  r2Adj = TRUE,
-  modelTest = TRUE)
-
-## lin reg in R to verify and to output as stargazer HTML + coeff plot
+## linear regression
 linear_model0 <- lm(repress_index ~ police, data = data)
-linear_model1 <- lm(repress_index ~ police + polity2_P4 + repress_index_lagged + gdp_WDI_log10 + cameo_protests + trade_WDI + pop_WDI_log10 + 
+linear_model1 <- lm(repress_index ~ police + polity2_P4 + repress_index_lagged + gdp_WDI_log10 + cameo_protests + usaidoblige_log + hasNHRI + pop_WDI_log10 + 
                       lji_LS, data = data)
 summary(linear_model0)
 summary(linear_model1)
@@ -132,46 +69,13 @@ summary(linear_model1)
 write(stargazer(linear_model0, linear_model1, type = "html"), "PMRepressionLinReg.html")
 
 ## output all the main models as html
-stargazer(linear_model1, olr1, clm1, type = "html", out = "DNR_MainModels.html")
+stargazer(olr1, clm1, linear_model1, type = "html", out = "DPMIR_MainModels.html")
 
 ## create corresponding odds ratio table for above
-stargazer(olr1, clm1, type = "html", apply.coef = exp, report = "vc", omit.table.layout = "n", out = "DNRMainModels_Odds.html")
+stargazer(olr1, clm1, type = "html", apply.coef = exp, report = "vc", omit.table.layout = "n", out = "DPMIRMainModels_Odds.html")
 
 ## present uncontrolled models for appendix
-stargazer(linear_model0, olr2, type = "html", out = "DNR_NoControls.html")
-
-## create plot of linear regression coefficients for model w/ controls
-windowsFonts(TNR = windowsFont("Times New Roman"))
-
-dwplot(linear_model1,
-       vline = geom_vline(
-         xintercept = 0,
-         colour = "grey60",
-         linetype = 2)) + theme_bw() + xlab("Coefficient Estimate") + 
-  ylab("") + 
-  ggtitle("Predictors of Repression - Linear Regression") + 
-  theme(legend.position = "none", text = 
-          element_text(family = "TNR", size = 12)) + scale_color_grey() + scale_y_discrete(labels = c("Latent Judicial Independence", "Log Population", "Trade (as % of GDP)", "Number of Protest Events", "Log GDP (constant 2010 USD)", "CIRI Score 1 Year Lag", "Polity Score", "Police Militarization"))
-
-## auxillary testing: does PM act to increase threat? test w/ cameo_protests
-linReg(
-  data = data,
-  dep = cameo_protests,
-  factors = police,
-  blocks = list(
-    list(
-      "police")),
-  refLevels = list(
-    list(
-      var="police",
-      ref="0")),
-  r2Adj = TRUE,
-  modelTest = TRUE)
-
-## verify with R and output into Stargazer
-linear_modelaux <- lm(cameo_protests ~ police, data = data)
-summary(linear_modelaux)
-write(stargazer(linear_modelaux, type = "html"), "ProtestsPM.html")
+stargazer(olr2, linear_model0, type = "html", out = "DPMIR_NoControls.html")
 
 ## violin plot to open up the analysis discussion section
 theme_custom <- function (base_size = 12, color = "white", base_family = "sans", 
