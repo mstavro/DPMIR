@@ -15,24 +15,23 @@ set.seed(33603)
 
 ## load subpolice and filter s.t. all cases on subpolice = 0
 ## subpolice 0 = full centralized authority over police
-subpol <- read_csv(file.choose())
-subpol <- subpol %>% filter(subpolice_IDC == 0)
+data <- read_csv(file.choose())
+data <- data %>% filter(subpolice_IDC == 0)
 
-olr1 <- polr(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + trade_WDI + repress_index_lagged + polity2_P4 + pop_WDI_log10 + lji_LS, data = subpol, method = "logistic")
+olr1 <- polr(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + usaidoblige_log + hasNHRI + repress_index_lagged + polity2_P4 + pop_WDI_log10 + lji_LS, data = data, method = "logistic")
 summary(olr1)
-lm1 <- lm(repress_index ~ police + polity2_P4 + repress_index_lagged + gdp_WDI_log10 + cameo_protests + trade_WDI + pop_WDI_log10 +
-                      lji_LS, data = subpol)
+lm1 <- lm(repress_index ~ police + polity2_P4 + repress_index_lagged + gdp_WDI_log10 + cameo_protests + usaidoblige_log + hasNHRI + pop_WDI_log10 +
+                      lji_LS, data = data)
 brant(olr1)
 
-clm1 <- clm(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + trade_WDI + repress_index_lagged + polity2_P4, nominal = ~ lji_LS + pop_WDI_log10, data = subpol)
-## fit is invalid; mean centering required
-subpol <- subpol %>% mutate(pop_mc = pop_WDI_log10 - mean(pop_WDI_log10, na.rm = TRUE))
-clm1 <- clm(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + trade_WDI + repress_index_lagged + polity2_P4, nominal = ~ lji_LS + pop_mc, data = subpol)
-summary(clm1)
+## mean center for successful convergence
+data <- data %>% mutate(pop_mc = pop_WDI_log10 - mean(pop_WDI_log10, na.rm = TRUE))
+data <- data %>% mutate(gdp_mc = gdp_WDI_log10 - mean(gdp_WDI_log10, na.rm = TRUE))
+clm1 <- clm(as.factor(repress_index) ~ police + gdp_mc + cameo_protests + usaidoblige_log + hasNHRI + repress_index_lagged + polity2_P4, nominal = ~ pop_mc + lji_LS, data = data)
 
 stargazer(lm1, olr1, clm1, out = "Robustness Test Using Centralized Police Only.html")
 
-maximaldiffs <- ordChange(olr1, data = subpol)
+maximaldiffs <- ordChange(olr1, data = data)
 maximaldiffs
 
 ## oc2plot will print the plot incorrectly as it starts the X scale at 1
@@ -65,5 +64,3 @@ oc2plotadjusted <- function (ordc, plot = TRUE)
 oc2plotadjusted(maximaldiffs)
 
 clm1$convergence
-
-## warning messages below resolved by clm1$convergence check

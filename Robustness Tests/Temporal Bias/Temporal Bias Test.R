@@ -4,7 +4,7 @@ if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
   install.packages(setdiff(packages, rownames(installed.packages())), repos="http://cran.rstudio.com/")  
 }
 lapply(packages, library, character.only = T)
-## when prompted select the file location of parsed data
+## when prompted select the file location of main dataset
 data <- read_csv(file.choose())
 ## creates a time series plot of avg. police militarization internationally
 data %>% ggplot(aes(x = year, y = repress_index)) + stat_summary(fun.data = "mean_cl_normal", geom = "smooth", color = "black") + xlab("Year") + ylab("Average Repression Level") + theme_clean() + geom_vline(xintercept = 1994)
