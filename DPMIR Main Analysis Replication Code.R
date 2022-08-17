@@ -2,7 +2,7 @@
 ## 8.16.22
 ## DPMIR Main Analyses
 rm(list=ls())
-packages <- c("jmv", "readr", "MASS", "dplyr", "brant", "ordinal", "dotwhisker", "stargazer", "ggthemes", "googleVis", "DAMisc", "lattice")
+packages <- c("jmv", "readr", "MASS", "dplyr", "brant", "ordinal", "dotwhisker", "stargazer", "ggthemes", "googleVis", "DAMisc", "lattice", "stringr")
 if (length(setdiff(packages, rownames(installed.packages()))) > 0)
 {
   install.packages(setdiff(packages, rownames(installed.packages())), repos="https://cran.rstudio.com/")
@@ -18,13 +18,18 @@ set.seed(33603)
 data <- read_csv(file.choose())
 
 ## how many countries and what period of time?
-data2 <- data %>% select(police, repress_index_lagged, usaidoblige_log, hasNHRI, cameo_protests, pop_WDI_log10, polity2_P4, gdp_WDI_log10, lji_LS, ifs, year)
+data2 <- data %>% select(police, repress_index_lagged, hasNHRI, cameo_protests, pop_WDI_log10, polity2_P4, gdp_WDI_log10, lji_LS, ifs, cowcode, year, country.x)
 data3 <- na.omit(data2)
 n_distinct(data3$ifs)
 range(data3$year)
 
+## choose csv called "geocoding"
+## geocoding <- read_csv(file.choose())
+## G1 <- gvisGeoChart(geocoding, "geocode", "police")
+## plot(G1)
+
 ## ordered logit
-olr1 <- polr(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + usaidoblige_log + hasNHRI + repress_index_lagged + polity2_P4 + pop_WDI_log10 + lji_LS, data = data, method = "logistic")
+olr1 <- polr(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + hasNHRI + repress_index_lagged + polity2_P4 + pop_WDI_log10 + lji_LS, data = data, method = "logistic")
 summary(olr1)
 
 ## check the first model with just police
@@ -32,7 +37,7 @@ olr2 <- polr(as.factor(repress_index) ~ police, data = data, method = "logistic"
 summary(olr2)
 
 ## produce stargazer tables
-write(stargazer(olr2, olr1, type = "html"), "OrdinalTablesIST470.html")
+write(stargazer(olr2, olr1, type = "html"), "OrdinalTablesDPMIR.html")
 
 ## assumption test: parallel regression (proportional odds) Brant Test
 brant(olr1)
@@ -40,13 +45,8 @@ brant(olr1)
 ## parallel regression / proportional odds assumption violated
 ## test on clm() package as a generalized ordinal logit / partial
 ## proportional odds model
-clm1 <- clm(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + usaidoblige_log + repress_index_lagged + polity2_P4, nominal = ~ lji_LS + pop_WDI_log10, data = data)
+clm1 <- clm(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + repress_index_lagged + polity2_P4 + pop_WDI_log10, nominal = ~ lji_LS, data = data)
 clm1$convergence
-
-## invalid fit, mean center
-data <- data %>% mutate(pop_mc = pop_WDI_log10 - mean(pop_WDI_log10, na.rm = TRUE))
-data <- data %>% mutate(gdp_mc = gdp_WDI_log10 - mean(gdp_WDI_log10, na.rm = TRUE))
-clm1 <- clm(as.factor(repress_index) ~ police + gdp_mc + cameo_protests + usaidoblige_log + repress_index_lagged + polity2_P4, nominal = ~ lji_LS + pop_mc, data = data)
 
 ## obtain McFadden's R for clm
 clm0 <- clm(as.factor(repress_index) ~ 1, data = data)
@@ -60,7 +60,7 @@ stargazer(olr2, olr1, clm1, type = "html", apply.coef = exp, report = "vc", omit
 
 ## linear regression
 linear_model0 <- lm(repress_index ~ police, data = data)
-linear_model1 <- lm(repress_index ~ police + polity2_P4 + repress_index_lagged + gdp_WDI_log10 + cameo_protests + usaidoblige_log + hasNHRI + pop_WDI_log10 + 
+linear_model1 <- lm(repress_index ~ police + polity2_P4 + repress_index_lagged + gdp_WDI_log10 + cameo_protests + hasNHRI + pop_WDI_log10 + 
                       lji_LS, data = data)
 summary(linear_model0)
 summary(linear_model1)
@@ -69,13 +69,17 @@ summary(linear_model1)
 write(stargazer(linear_model0, linear_model1, type = "html"), "PMRepressionLinReg.html")
 
 ## output all the main models as html
-stargazer(olr1, clm1, linear_model1, type = "html", out = "DPMIR_MainModels.html")
-
+colabs <- c("Police militarization", "Number of protests", "Polity IV score", "Latent judicial independence", "NHRI presence", "Log GDP (constant 2010 USD)", "Log population", "Repression t-1")
+output <- stargazer(olr1, clm1, linear_model1, order = c(1, 3, 6, 8, 4, 2, 7, 5), type = "html", covariate.labels = colabs, dep.var.labels = c("Repression Index (Inverted CIRI Physical Integrity Index)", ""))
+output <- str_replace(output, "Repression t-1", "Repression<sub> t-1</sub>")
+write_lines(output, "DPMIR_MainModels.html")
 ## create corresponding odds ratio table for above
-stargazer(olr1, clm1, type = "html", apply.coef = exp, report = "vc", omit.table.layout = "n", out = "DPMIRMainModels_Odds.html")
+output <- stargazer(olr1, clm1, type = "html", apply.coef = exp, report = "vc", omit.table.layout = "n", order = c(1, 3, 6, 8, 4, 2, 7, 5), covariate.labels = colabs, dep.var.labels = "Repression Index (Inverted CIRI)")
+output <- str_replace(output, "Repression t-1", "Repression<sub> t-1</sub>")
+write_lines(output, "DPMIRMainModels_Odds.html")
 
 ## present uncontrolled models for appendix
-stargazer(olr2, linear_model0, type = "html", out = "DPMIR_NoControls.html")
+stargazer(olr2, linear_model0, type = "html", out = "DPMIR_NoControls.html", covariate.labels = "Police militarization")
 
 ## violin plot to open up the analysis discussion section
 theme_custom <- function (base_size = 12, color = "white", base_family = "sans", 

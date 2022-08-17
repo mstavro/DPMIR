@@ -2,7 +2,7 @@
 ## run the logit on countries only with centralized police control
 
 rm(list=ls())
-packages <- c("readr", "MASS", "dplyr", "brant", "ordinal", "stargazer", "DAMisc", "lattice")
+packages <- c("readr", "MASS", "dplyr", "brant", "ordinal", "stargazer", "DAMisc", "lattice", "stringr")
 if (length(setdiff(packages, rownames(installed.packages()))) > 0)
 {
   install.packages(setdiff(packages, rownames(installed.packages())), repos="https://cran.rstudio.com/")
@@ -18,19 +18,22 @@ set.seed(33603)
 data <- read_csv(file.choose())
 data <- data %>% filter(subpolice_IDC == 0)
 
-olr1 <- polr(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + usaidoblige_log + hasNHRI + repress_index_lagged + polity2_P4 + pop_WDI_log10 + lji_LS, data = data, method = "logistic")
-summary(olr1)
-lm1 <- lm(repress_index ~ police + polity2_P4 + repress_index_lagged + gdp_WDI_log10 + cameo_protests + usaidoblige_log + hasNHRI + pop_WDI_log10 +
-                      lji_LS, data = data)
-brant(olr1)
-
 ## mean center for successful convergence
 data <- data %>% mutate(pop_mc = pop_WDI_log10 - mean(pop_WDI_log10, na.rm = TRUE))
 data <- data %>% mutate(gdp_mc = gdp_WDI_log10 - mean(gdp_WDI_log10, na.rm = TRUE))
-clm1 <- clm(as.factor(repress_index) ~ police + gdp_mc + cameo_protests + usaidoblige_log + hasNHRI + repress_index_lagged + polity2_P4, nominal = ~ pop_mc + lji_LS, data = data)
 
-stargazer(lm1, olr1, clm1, out = "Robustness Test Using Centralized Police Only.html")
+olr1 <- polr(as.factor(repress_index) ~ police + gdp_mc + cameo_protests + hasNHRI + repress_index_lagged + polity2_P4 + pop_mc + lji_LS, data = data, method = "logistic")
+summary(olr1)
+lm1 <- lm(repress_index ~ police + polity2_P4 + repress_index_lagged + gdp_mc + cameo_protests + hasNHRI + pop_mc +
+                      lji_LS, data = data)
+brant(olr1)
 
+clm1 <- clm(as.factor(repress_index) ~ police + gdp_mc + cameo_protests + hasNHRI + repress_index_lagged + polity2_P4, nominal = ~ pop_mc + lji_LS, data = data)
+
+colabs <- c("Police militarization", "Number of protests", "Polity IV score", "Latent judicial independence", "NHRI presence", "Log GDP (constant 2010 USD)", "Log population", "Repression t-1")
+output <- stargazer(olr1, clm1, lm1, type = "html", order = c(1, 3, 6, 8, 4, 2, 7, 5), covariate.labels = colabs, dep.var.labels = c("Repression Index (Inverted CIRI)", ""))
+output <- str_replace(output, "Repression t-1", "Repression<sub> t-1</sub>")
+write_lines(output, "Robustness Test Using Centralized Police Only.html")
 maximaldiffs <- ordChange(olr1, data = data)
 maximaldiffs
 
