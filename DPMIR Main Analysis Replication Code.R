@@ -45,7 +45,7 @@ brant(olr1)
 ## parallel regression / proportional odds assumption violated
 ## test on clm() package as a generalized ordinal logit / partial
 ## proportional odds model
-clm1 <- clm(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + repress_index_lagged + polity2_P4 + pop_WDI_log10, nominal = ~ lji_LS, data = data)
+clm1 <- clm(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + repress_index_lagged + polity2_P4 + pop_WDI_log10 + hasNHRI, nominal = ~ lji_LS, data = data)
 clm1$convergence
 
 ## obtain McFadden's R for clm
