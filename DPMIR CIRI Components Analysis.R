@@ -2,7 +2,7 @@
 ## 6.23.22
 ## DNR DISAGGREGATION BY CIRI COMPONENT
 rm(list=ls())
-packages <- c("jmv", "readr", "MASS", "dplyr", "brant", "ordinal", "dotwhisker", "stargazer", "ggthemes", "googleVis", "DAMisc", "lattice", "DescTools")
+packages <- c("jmv", "readr", "MASS", "dplyr", "brant", "ordinal", "dotwhisker", "stargazer", "ggthemes", "googleVis", "DAMisc", "lattice", "DescTools", "stringr")
 if (length(setdiff(packages, rownames(installed.packages()))) > 0)
 {
   install.packages(setdiff(packages, rownames(installed.packages())), repos="https://cran.rstudio.com/")
