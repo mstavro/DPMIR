@@ -17,8 +17,8 @@ set.seed(33603)
 ## select the main data file
 ## GitHub repo/zip folder
 data <- read_csv(file.choose())
-data <- data %>% mutate(apts_lag = lag(politterr_a_PTS))
-data <- data %>% mutate(spts_lag = lag(politterr_s_PTS))
+data <- data %>% group_by(cowcode) %>% mutate(apts_lag = lag(politterr_a_PTS))
+data <- data %>% group_by(cowcode) %>% mutate(spts_lag = lag(politterr_s_PTS))
 
 ## results in nonconvergence without mean centering of GDP and pop
 data <- data %>% mutate(pop_mc = pop_WDI_log10 - mean(pop_WDI_log10, na.rm = TRUE))
@@ -43,15 +43,14 @@ brant(olrS)
 clmA <-
   clm(
     as.factor(politterr_a_PTS) ~ police + gdp_mc + polity2_P4
-    + lji_LS + hasNHRI, nominal = ~ cameo_protests + pop_mc + apts_lag,
+     + hasNHRI, nominal = ~ cameo_protests + pop_mc + apts_lag + lji_LS,
     data = data
   )
 summary(clmA)
 
 clmS <-
   clm(
-    as.factor(politterr_s_PTS) ~ police + cameo_protests + polity2_P4 + 
-      lji_LS, nominal = ~ gdp_mc + spts_lag + pop_mc + hasNHRI,
+    as.factor(politterr_s_PTS) ~ police + polity2_P4 + gdp_mc + spts_lag + pop_mc, nominal = ~ lji_LS + cameo_protests + hasNHRI,
     data = data
   )
 summary(clmS)

@@ -34,10 +34,10 @@ data <- data %>% select(unique(colnames(.)))
 data <- distinct(data)
 
 ## lag variables of interest to prepare for logits
-data <- data %>% mutate(scarring_lagged = lag(scarring))
-data <- data %>% mutate(stealth_lagged = lag(stealth))
-data <- data %>% mutate(illtreatment_lagged = lag(illtreatment))
-data <- data %>% mutate(unknown_lagged = lag(unknown))
+data <- data %>% group_by(cowcode) %>% mutate(scarring_lagged = lag(scarring))
+data <- data %>% group_by(cowcode) %>% mutate(stealth_lagged = lag(stealth))
+data <- data %>% group_by(cowcode) %>% mutate(illtreatment_lagged = lag(illtreatment))
+data <- data %>% group_by(cowcode) %>% mutate(unknown_lagged = lag(unknown))
 
 ## logits; glm family binomial
 logitStealth <- glm(stealth ~ police + polity2_P4 + stealth_lagged + gdp_WDI_log10 + cameo_protests + hasNHRI + pop_WDI_log10 + lji_LS, family = "binomial", data = data)
