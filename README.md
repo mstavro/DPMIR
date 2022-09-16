@@ -1,6 +1,8 @@
 # Repository for Replication of "Does Police Militarization Increase Repression?"
 Replication data for the paper "Does Police Militarization Increase Repression?"
 
+**overhaul of README needed**
+
 ### Folder and File Descriptions
 #### Main Replication Files
 Contains the R script and dataset required to replicate the main results of the paper.
