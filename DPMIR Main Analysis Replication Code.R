@@ -18,10 +18,10 @@ set.seed(33603)
 data <- read_csv(file.choose())
 
 ## how many countries and what period of time?
-data2 <- data %>% select(police, repress_index_lagged, hasNHRI, cameo_protests, pop_WDI_log10, polity2_P4, gdp_WDI_log10, lji_LS, ifs, cowcode, year, country.x)
-data3 <- na.omit(data2)
-n_distinct(data3$ifs)
-range(data3$year)
+## data2 <- data %>% select(police, repress_index_lagged, hasNHRI, cameo_protests, pop_WDI_log10, polity2_P4, gdp_WDI_log10, lji_LS, ifs, cowcode, year, country.x)
+## data3 <- na.omit(data2)
+## n_distinct(data3$ifs)
+## range(data3$year)
 
 ## choose csv called "geocoding"
 ## geocoding <- read_csv(file.choose())
@@ -45,7 +45,7 @@ brant(olr1)
 ## parallel regression / proportional odds assumption violated
 ## test on clm() package as a generalized ordinal logit / partial
 ## proportional odds model
-clm1 <- clm(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + repress_index_lagged + polity2_P4 + pop_WDI_log10 + hasNHRI, nominal = ~ lji_LS, data = data)
+clm1 <- clm(as.factor(repress_index) ~ gdp_WDI_log10 + cameo_protests + repress_index_lagged + polity2_P4 + pop_WDI_log10 + hasNHRI + lji_LS, nominal = ~ police, data = data)
 clm1$convergence
 
 ## obtain McFadden's R for clm
