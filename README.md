@@ -12,7 +12,7 @@ Contains the R script and full data required to replicate the component results 
 Contains subfolders which house the files required to run robustness tests (ex. PTS substitution for CIRI).
 #### Unfiltered Data and Descriptives
 Houses the central dataset prior to any filtering/variable selection along with an R script to obtain descriptives.
-#### Jamovi Replication File
+#### Jamovi Replication File (DEPRECATED)
 Provides a .omv file that contains the dataset in jamovi as well as some analyses. Provided for interested parties who would like to work with a graphical interface (similar to IBM SPSS) instead of R code.
 
 ### How to Run Replications
