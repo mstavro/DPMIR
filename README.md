@@ -6,7 +6,7 @@ This document contains instructions on how to replicate the analyses from "Does 
 ---
 
 ### To Do:
-*[ ] After repo is made public, use Github links to automatically receive datasets in scripts
+* [ ] After repo is made public, use Github links to automatically receive datasets in scripts
 
 ---
 
