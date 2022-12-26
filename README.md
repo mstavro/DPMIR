@@ -34,4 +34,4 @@ A .omv file that allows users to view and manipulate data in jamovi. Intended fo
 ---
 
 ### To Do:
-* [ ] After repo is made public, use Github links to automatically receive datasets in scripts
+* [ ] After repo is made public, use Github links to automatically retrieve datasets in scripts
