@@ -4,10 +4,12 @@ Replication data for the paper "Does Police Militarization Increase Repression?"
 This document contains instructions on how to replicate the analyses from "Does Police Militarization Increase Repression?"
 
 ---
+
 ###To Do:
 * [] After repo is made public, use Github links to automatically receive datasets in scripts
 
 ---
+
 ###Before You Start
 Check where your working directory is set. Running these analyses will output multiple files to the working directory (i.e., HTML files for the regression tables). If you do not want files to suddenly appear in your working directory, create a separate file for the output from these scripts and set that to the working directory.
 
