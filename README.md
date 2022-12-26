@@ -5,11 +5,6 @@ This document contains instructions on how to replicate the analyses from "Does 
 
 ---
 
-### To Do:
-* [ ] After repo is made public, use Github links to automatically receive datasets in scripts
-
----
-
 ### Before You Start
 Check where your working directory is set. Running these analyses will output multiple files to the working directory (i.e., HTML files for the regression tables). If you do not want files to suddenly appear in your working directory, create a separate file for the output from these scripts and set that to the working directory.
 
@@ -35,3 +30,8 @@ Contains subfolders which house the files required to run robustness tests (ex. 
 A file used to produce a googleVis map of the countries covered by the dataset. Most users probably will not need this. For those who are interested in seeing the map, remove the comment tags in the main data replication file.
 #### Jamovi Replication File 
 A .omv file that allows users to view and manipulate data in jamovi. Intended for users who would prefer a GUI-based environment like SPSS opposed to programming interface like R. Note that the user may have to replicate some analyses in jamovi on their own. See the R scripts for the variable names needed to drag-and-drop into the jamovi prompts (ex. police, repress_index, repress_index_lagged, polity2_P4, etc.).
+
+---
+
+### To Do:
+* [ ] After repo is made public, use Github links to automatically receive datasets in scripts
