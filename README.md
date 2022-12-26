@@ -30,7 +30,7 @@ Provides descriptives from the dataset ("DPMIR Main Data.csv").
 #### LICENSE
 The code/analyses in this repository are provided under an MIT license. If you are interested in specific terms see this file.
 #### Robustness Tests
-Contains subfolders which house the files required to run robustness tests (ex. PTS substitution for CIRI). These robustness checks are found both in the main paper and appendix. There may be some additional robustness checks not included in the appendix (ex. ITT).
+Contains subfolders which house the files required to run robustness tests (ex. PTS substitution for CIRI). These robustness checks are found both in the main paper and appendix. There may be some additional robustness checks not included in the appendix (ex. ITT or USAID). Some replication subfolders have accompanying data that is different from the main dataset. If this is the case, these scripts should be run with their associated .csv in the subfolder. Comments in the code should indicate which file to use. When this repository goes public, the scripts should contain links to the appropriate datasets which will automatically pull the required data.
 #### geocoding.csv
 A file used to produce a googleVis map of the countries covered by the dataset. Most users probably will not need this. For those who are interested in seeing the map, remove the comment tags in the main data replication file.
 #### Jamovi Replication File 
