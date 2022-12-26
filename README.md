@@ -1,7 +1,7 @@
 # Repository for Replication of "Does Police Militarization Increase Repression?"
 Replication data for the paper "Does Police Militarization Increase Repression?"
 
-This document contains instructions on how to replicate the analyses from "Does Police Militarization Increase Repression?"
+This document contains instructions on how to replicate the analyses from "Does Police Militarization Increase Repression?" Viewing the commit history also provides a record on how the analyses changed over time (model adjustments, debugging, etc.).
 
 ---
 
