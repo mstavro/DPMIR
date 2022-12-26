@@ -5,12 +5,12 @@ This document contains instructions on how to replicate the analyses from "Does 
 
 ---
 
-###To Do:
-* [] After repo is made public, use Github links to automatically receive datasets in scripts
+### To Do:
+*[ ] After repo is made public, use Github links to automatically receive datasets in scripts
 
 ---
 
-###Before You Start
+### Before You Start
 Check where your working directory is set. Running these analyses will output multiple files to the working directory (i.e., HTML files for the regression tables). If you do not want files to suddenly appear in your working directory, create a separate file for the output from these scripts and set that to the working directory.
 
 **These scripts will clear your environment prior to running and automatically install the required packages.** Make sure to save/backup anything you would dislike being lost from your R environment prior to running these scripts.
