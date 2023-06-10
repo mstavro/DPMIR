@@ -16,6 +16,7 @@ This document contains instructions on how to replicate the analyses from "Does 
 The code provided is intended to be plug and play. **All you need to do to replicate the analyses in the main paper and appendix is run all the code in "DPMIR Replication Script.R" using CTRL + SHIFT + ENTER.** The R script has been set up to automatically pull the data from the repository by passing the raw content link to the read_csv() function.  
 
 The code is divided into different sections depending on what table/figure is being replicated. In RStudio, you can use these comment dividers for navigation similar to a "table of contents" as seen in the image below.
+
 ![image](https://github.com/mstavro/DPMIR/assets/86576037/75ab65ea-5a64-4836-a9ec-288bde6ab168)
 
 **It is highly recommended that you run the code in its entirety in its original order.** This makes it easy to replicate all the data correctly. While the code is divided into sections, _some sections cross-reference objects (regressions, etc.) created in earlier sections, so skipping around may produce errors._
