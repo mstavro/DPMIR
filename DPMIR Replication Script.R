@@ -1,7 +1,7 @@
 #### MARTIN STAVRO, DR. RYAN WELCH ####
 ## Replication Code for "Does Police Militarization Increase Repression?"
 ## Submitted to the Journal of Conflict Resolution
-## 6/9/2023
+## June 9 2023
 
 #### LOAD REQUIRED PACKAGES AND SET CONFIG. OPTIONS ####
 if(!require(pacman)) install.packages("pacman")
@@ -33,18 +33,18 @@ theme_lightmode <- function (base_size = 12, color = "white", base_family = "san
 theme_set(theme_lightmode())
 
 #### LOAD MAIN DATASET BY PULLING FROM GITHUB REPO ####
-data_main <- read_csv(file.choose())
+data_main <- read_csv("https://github.com/mstavro/DPMIR/raw/main/DATA/DPMIR%20Main%20Data.csv")
 
 ##### NO REPLICATION FOR FIGURE 1 - JUST A GRAPHIC, CONTAINS NO DATA #####
 
 #### REPLICATE FIGURE 2: "GLOBAL POLICE MILITARIZATION OVER TIME, 1965-2010" ####
 ## Take the main data and get the mean of PM in each year
-global_mean <- data_main %>% group_by(year) %>% summarize(mean_PM = mean(police))
-outputF2 <- ggplot(global_mean, aes(year, global_PM_mean)) + geom_smooth(se = FALSE, color = "#78a9ff") + ylab("Proportion of Countries with Militarized Police\n") + xlab("Year") + theme_lightmode() + theme(axis.text.x = element_text(size = rel(1.3)), axis.text.y = element_text(size = rel(1.3)), axis.title.y = element_text(size = rel(1.3)), axis.title.x = element_text(size = rel(1.3)))
+global_mean <- summarise(data_main, mean_PM = mean(police), .by = year)
+outputF2 <- ggplot(global_mean, aes(year, mean_PM)) + geom_smooth(se = FALSE, color = "#78a9ff") + ylab("Proportion of Countries with Militarized Police\n") + xlab("Year") + theme_lightmode() + theme(axis.text.x = element_text(size = rel(1.3)), axis.text.y = element_text(size = rel(1.3)), axis.title.y = element_text(size = rel(1.3)), axis.title.x = element_text(size = rel(1.3)))
 outputF2
 
 #### REPLICATE FIGURE 3: "VIOLIN PLOT OF REPRESSION INDEX BY POLICE MILITARIZATION" ####
-outputF3 <- ggplot(data = data_main, aes(x = police, y = repress_index, group = police)) + geom_violin(orientation = "x") + scale_x_continuous(breaks = c(0,1), labels = c("No Police Militarization", "Police Militarization")) + scale_y_continuous(breaks = c(0:8)) + xlab("Police Militarization") + ylab("Repression Index (Inverted CIRI Index)") + stat_summary(fun = "median", geom = "point") + theme_custom() + theme(axis.title.y = element_text(vjust = 3))
+outputF3 <- ggplot(data = data_main, aes(x = police, y = repress_index, group = police)) + geom_violin(orientation = "x") + scale_x_continuous(breaks = c(0,1), labels = c("No Police Militarization", "Police Militarization")) + scale_y_continuous(breaks = c(0:8)) + xlab("Police Militarization") + ylab("Repression Index (Inverted CIRI Index)") + stat_summary(fun = "median", geom = "point") + theme_lightmode() + theme(axis.title.y = element_text(vjust = 3))
 outputF3
 
 #### REPLICATE TABLE 1: "ANALYSIS OF REPRESSION OUTCOMES" ####
@@ -105,16 +105,16 @@ outputT4 <- stargazer(olrD, olrP, olrK, olrT, type = "text", order = c(1, 3, 9, 
 ## Compute six binomial models to control for presence of repression, previous repression, and controls 
 ## (2!3 take away the 2 scenarios where explanatory vars are not tested)
 glm1 <- glm(newpolice ~ repress_index + polity2_P4 + repress_index_lagged + gdp_WDI_log10 + cameo_protests + hasNHRI + pop_WDI_log10 + 
-              lji_LS, data = data, family = "binomial")
-glm2 <- glm(newpolice ~ repress_index, data = data, family = "binomial")
-glm3 <- glm(newpolice ~ repress_index + repress_index_lagged, data = data, family = "binomial")
-glm4 <- glm(newpolice ~ repress_index_lagged, data = data, family = "binomial")
+              lji_LS, data = data_main, family = "binomial")
+glm2 <- glm(newpolice ~ repress_index, data = data_main, family = "binomial")
+glm3 <- glm(newpolice ~ repress_index + repress_index_lagged, data = data_main, family = "binomial")
+glm4 <- glm(newpolice ~ repress_index_lagged, data = data_main, family = "binomial")
 glm5 <- glm(newpolice ~ polity2_P4 + repress_index_lagged + gdp_WDI_log10 + cameo_protests + hasNHRI + pop_WDI_log10 + 
-              lji_LS, data = data, family = "binomial")
+              lji_LS, data = data_main, family = "binomial")
 glm6 <- glm(newpolice ~ repress_index + polity2_P4 + gdp_WDI_log10 + cameo_protests + hasNHRI + pop_WDI_log10 + 
-              lji_LS, data = data, family = "binomial")
+              lji_LS, data = data_main, family = "binomial")
 colabs2 <- c("Repression", "Repression t-1", "Number of protests", "Polity IV score", "Latent judicial independence", "NHRI presence", "Log GDP (constant 2010 USD)", "Log population")
-outputT5 <- stargazer(glm1, glm6, glm3, glm2, glm4, glm5, order = c(1,3,5,2,8,6,4,7), covariate.labels = colabs2, dep.var.labels = "Newly Militarized Police", type = "html")
+outputT5 <- stargazer(glm1, glm6, glm3, glm2, glm4, glm5, order = c(1,3,5,2,8,6,4,7), covariate.labels = colabs2, dep.var.labels = "Newly Militarized Police", type = "text")
 ### If you want an HTML table (exactly how the table appears in the paper) saved to your working directory:
 #### 1) Replace type = "text" with type = "html" in the stargazer command above
 #### 2) Uncomment and run the following 2 lines by deleting "##" and using CTRL + ENTER
@@ -152,10 +152,10 @@ outputFA2
 
 #### REPLICATE FIGURE A3: "MAP OF COUNTRIES REPRESENTED IN DATA ANALYSIS" ####
 ## Load a modified version of the data from GitHub repo with geocoded countries readable by googleVis
-## The geocoded file is the same as the main file, with an additional variable using 
-## Microsoft Excel's "Geography" field to standardize location names.
-geocoded <- read_csv(file.choose())
-outputFA3 <- gvisGeoChart(geocoding, "geocode", "police")
+## The geocoded file is a filtered down version of the main file with NAs dropped, plus a variable 
+## using Microsoft Excel's "Geography" field to standardize location names for googleVis.
+geocoded <- read_csv("https://github.com/mstavro/DPMIR/raw/main/DATA/geocoding.csv")
+outputFA3 <- gvisGeoChart(geocoded, "geocode")
 plot(outputFA3)
 
 #### REPLICATE FIGURE A4: "TIME SERIES PLOT FOR TEMPORAL BIAS" ####
@@ -191,7 +191,10 @@ outputFA5 <- oc2plotadjusted(maximaldiffs)
 outputFA5
 
 #### REPLICATE TABLE A4: "UNCONTROLLED ORDERED LOGIT AND LINEAR REGRESSION OF POLICE MILITARIZATION AND REPRESSION" ####
-outputTA4 <- stargazer(olr2, linear_model0, type = "text", covariate.labels = "Police militarization")
+## Compute ordered logit and linear regression without controls
+olrTA4 <- polr(as.factor(repress_index) ~ police, data = data_main, method = "logistic")
+linear_modelTA4 <- lm(repress_index ~ police, data = data_main)
+outputTA4 <- stargazer(olrTA4, linear_modelTA4, type = "text", covariate.labels = "Police militarization")
 
 #### REPLICATE TABLE A5: "POLICE MILITARIZATION AND REPRESSION UNDER CENTRALIZED CONTROL" ####
 ## Create a copy of the data that filters for only centralized control of police (no federalism)
@@ -279,9 +282,9 @@ outputTA7 <- stargazer(clmD, clmP, clmK, type = "text", order = c(1, 3, 6, 8, 4,
 
 #### REPLICATE TABLE A8: "U.S. DATA ROBUSTNESS CHECKS"
 ## Pull data with the U.S. removed from the GitHub repository
-data_USremoved <- read_csv(file.choose())
+data_USremoved <- read_csv("https://github.com/mstavro/DPMIR/raw/main/DATA/DPMIR%20US%20Removed.csv")
 ## Pull data with the U.S. recoded to having police militarization from the GitHub repository
-data_USrecoded <- read_csv(file.choose())
+data_USrecoded <- read_csv("https://github.com/mstavro/DPMIR/raw/main/DATA/DPMIR%20US%20Recoded.csv")
 ## Compute ordered logits
 olrRM <- polr(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + hasNHRI + repress_index_lagged + polity2_P4 + pop_WDI_log10 + lji_LS, data = data_USremoved, method = "logistic")
 olrRE <- polr(as.factor(repress_index) ~ police + gdp_WDI_log10 + cameo_protests + hasNHRI + repress_index_lagged + polity2_P4 + pop_WDI_log10 + lji_LS, data = data_USrecoded, method = "logistic")
@@ -349,7 +352,10 @@ outputTA14
 
 #### REPLICATE TABLE A15: "TWO-WAY FIXED EFFECTS ROBUSTNESS CHECK" ####
 ## Develop two-way fixed effects model
+## PLM conflicts with lag() command used above; need to load and reload here
+p_load("plm")
 plm1 <- plm(repress_index ~ police + polity2_P4 + repress_index_lagged + gdp_WDI_log10 + cameo_protests + hasNHRI + pop_WDI_log10 + lji_LS, data = data_main, index = c("cowcode", "year"), model = "within", effect = "twoways")
+p_unload("plm")
 ## Create table using stargazer
 colabs <- c("Police militarization", "Number of protests", "Polity IV score", "Latent judicial independence", "NHRI presence", "Log GDP (constant 2010 USD)", "Log population", "Repression t-1")
 outputTA15 <- stargazer(plm1, order = c(1, 5, 2, 8, 6, 4, 7, 3), type = "text", covariate.labels = colabs, dep.var.labels = c("Repression Index (Inverted CIRI Physical Integrity Index)", ""))
@@ -367,7 +373,7 @@ olrINT <- polr(as.factor(repress_index) ~ troops + gdp_WDI_log10 + cameo_protest
 ## Brant test
 brant(olrINT)
 ## Develop proportional odds model based on Brant test
-clmINT <- clm(as.factor(repress_index) ~ troops + gdp_WDI_log10 + cameo_protests + repress_index_lagged + polity2_P4 + pop_WDI_log10 + hasNHRI, nominal = ~ lji_LS, data = data)
+clmINT <- clm(as.factor(repress_index) ~ troops + gdp_WDI_log10 + cameo_protests + repress_index_lagged + polity2_P4 + pop_WDI_log10 + hasNHRI, nominal = ~ lji_LS, data = data_main)
 colabs <- c("Interior troops", "Number of protests", "Polity IV score", "Latent judicial independence", "NHRI presence", "Log GDP (constant 2010 USD)", "Log population", "Repression t-1")
 outputTA16 <- stargazer(linear_modelINT, olrINT, clmINT, type = "text", order = c(1,5,2,8,6,4,7,3), covariate.labels = colabs)
 ### If you want an HTML table (exactly how the table appears in the paper) saved to your working directory:
