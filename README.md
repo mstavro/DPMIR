@@ -2,7 +2,7 @@
 Replication data for the paper "Does Police Militarization Increase Repression?" 
 
 Authors:
-- Martin Stavro [![Orcid ID](https://orcid.org/sites/default/files/images/orcid_16x16.png)](https://orcid.org/0000-0002-7527-9582)  [![LinkedIn](https://github.com/mstavro/DPMIR/assets/86576037/4017b9d1-bba9-4087-a187-5d4bbba66f6a)](https://www.linkedin.com/in/martinstavro/)
+- Martin Stavro [![Orcid ID](https://orcid.org/sites/default/files/images/orcid_16x16.png)](https://orcid.org/0000-0002-7527-9582)  [![LinkedIn](https://github.com/mstavro/DPMIR/assets/86576037/4017b9d1-bba9-4087-a187-5d4bbba66f6a)][1]
 - Dr. Ryan Welch
 
 This document contains instructions on how to replicate the analyses from "Does Police Militarization Increase Repression?" Viewing the commit history also provides a record on how the analyses changed over time (model adjustments, debugging, etc.).
@@ -53,3 +53,5 @@ R failed to fetch the data files from the GitHub repository on its own. This can
 - **DPMIR US Removed:** A modification to the main data where US cases are removed.
 - **Geocoded:** A parsed version of the main data with a geocoded field allowing for a nice visualization with googleVis.
 - **License:** The fine print. It's an MIT License. It lets you do with the data what you please, with some stipulations.
+
+[1]: https://www.linkedin.com/in/martinstavro/
