@@ -5,33 +5,46 @@ This document contains instructions on how to replicate the analyses from "Does 
 
 ---
 
-### Before You Start
-Check where your working directory is set. Running these analyses will output multiple files to the working directory (i.e., HTML files for the regression tables). If you do not want files to suddenly appear in your working directory, create a separate file for the output from these scripts and set that to the working directory.
-
-**These scripts will clear your environment prior to running and automatically install the required packages.** Make sure to save/backup anything you would dislike being lost from your R environment prior to running these scripts.
+### Prerequisites
+- R (preferably up to date)
+- RStudio (preferably up to date)
+- Some free memory
 
 ---
 
-### General Notes on How to Run Replications
-A lot of the code is designed to be plug and play in R or R Studio. By the time this repository is made public, the R scripts should be overhauled to pull data files directly from GitHub. All the user needs to do is run the entire script (and, on occasion, press enter to deal with some diagnostic prompts). 
+### Instructions to Replicate
+The code provided is intended to be plug and play. **All you need to do to replicate the analyses in the main paper and appendix is run all the code in "DPMIR Replication Script.R" using CTRL + SHIFT + ENTER.** The R script has been set up to automatically pull the data from the repository by passing the raw content link to the read_csv() function.  
+
+The code is divided into different sections depending on what table/figure is being replicated. In RStudio, you can use these comment dividers for navigation similar to a "table of contents" as seen in the image below.
+![image](https://github.com/mstavro/DPMIR/assets/86576037/75ab65ea-5a64-4836-a9ec-288bde6ab168)
+
+**It is highly recommended that you run the code in its entirety in its original order.** This makes it easy to replicate all the data correctly. While the code is divided into sections, _some sections cross-reference objects (regressions, etc.) created in earlier sections, so skipping around may produce errors._
+
+---
+
+### Accessing Replicated Figures/Tables
+After running the replication code in its entirely, replicated tables/figures are stored as objects. These objects can be called using this general syntax:
+- For tables: **outputT#** (where # is the number of the table. For example, table 1 is outputT1).
+- For figures: **outputF#**
+- For tables/figures in the appendix: **outputTA#** or **outputFA#**
+Note that there is no object for outputF1, as this figure is simply a graphic and was not created in R.
+
+---
+
+### Troubleshooting
+# ERROR: SSL Handshake Failed
+R failed to fetch the data files from the GitHub repository on its own. This can typically be solved in one of two ways:
+1) Try running the script again (this tends to fix it)
+2) Manually change the content inside read_csv() to connect to a downloaded version of the GitHub data files on your local machine (an easy way to do this is some_data <- read_csv(file.choose())
 
 ---
 
 ### Folder and File Descriptions
-#### DPMIR Main Analysis Replication Code.R
-The main analysis file. Contains the code needed to replicate the primary tables. It pulls from DPMIR Main Data.csv. It should be plug-and-play; all that is needed is to run the code. When this repository goes public, the code should be updated and will pull the data from GitHub automatically.
-#### DPMIR Data Descriptives.R
-Provides descriptives from the dataset ("DPMIR Main Data.csv").
-#### LICENSE
-The code/analyses in this repository are provided under an MIT license. If you are interested in specific terms see this file.
-#### Robustness Tests
-Contains subfolders which house the files required to run robustness tests (ex. PTS substitution for CIRI). These robustness checks are found both in the main paper and appendix. There may be some additional robustness checks not included in the appendix (ex. ITT or USAID). Some replication subfolders have accompanying data that is different from the main dataset. If this is the case, these scripts should be run with their associated .csv in the subfolder. Comments in the code should indicate which file to use. When this repository goes public, the scripts should contain links to the appropriate datasets which will automatically pull the required data.
-#### geocoding.csv
-A file used to produce a googleVis map of the countries covered by the dataset. Most users probably will not need this. For those who are interested in seeing the map, remove the comment tags in the main data replication file.
-#### Jamovi Replication File 
-A .omv file that allows users to view and manipulate data in jamovi. Intended for users who would prefer a GUI-based environment like SPSS opposed to programming interface like R. Note that the user may have to replicate some analyses in jamovi on their own. See the R scripts for the variable names needed to drag-and-drop into the jamovi prompts (ex. police, repress_index, repress_index_lagged, polity2_P4, etc.).
-
----
-
-### To Do:
-* [ ] After repo is made public, use Github links to automatically retrieve datasets in scripts
+# Main Folder
+- **DPMIR Replication Script.R:** The one-stop shop to replicate everything in the paper.
+# Data Folder
+- **DPMIR Main Data:** The dataset that most of the paper relies upon - the good stuff.
+- **DPMIR US Recoded:** A modification to the main data where the US is recoded to have police militarization (0 -> 1; we address in the paper why it was 0 to begin with).
+- **DPMIR US Removed:** A modification to the main data where US cases are removed.
+- **Geocoded:** A parsed version of the main data with a geocoded field allowing for a nice visualization with googleVis.
+- **License:** The fine print. It's an MIT License. It lets you do with the data what you please, with some stipulations.
