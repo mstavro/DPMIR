@@ -51,7 +51,7 @@ R failed to fetch the data files from the GitHub repository on its own. This can
 - **DPMIR Main Data:** The dataset that most of the paper relies upon.
 - **DPMIR US Recoded:** A modification to the main data where the US is recoded to have police militarization (0 -> 1; we address in the paper why it was 0 to begin with).
 - **DPMIR US Removed:** A modification to the main data where US cases are removed.
-- **Geocoded:** A parsed version of the main data with a geocoded field allowing for a nice visualization with googleVis.
+- **Geocoding:** A parsed version of the main data with a geocoded field allowing for a nice visualization with googleVis.
 - **License:** The fine print. It's an MIT License. It lets you do with the data what you please, with some stipulations.
 
 [1]: https://www.linkedin.com/in/martinstavro/
