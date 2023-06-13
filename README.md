@@ -48,7 +48,7 @@ R failed to fetch the data files from the GitHub repository on its own. This can
 ### Main Folder
 - **DPMIR Replication Script.R:** The one-stop shop to replicate everything in the paper.
 ### Data Folder
-- **DPMIR Main Data:** The dataset that most of the paper relies upon - the good stuff.
+- **DPMIR Main Data:** The dataset that most of the paper relies upon.
 - **DPMIR US Recoded:** A modification to the main data where the US is recoded to have police militarization (0 -> 1; we address in the paper why it was 0 to begin with).
 - **DPMIR US Removed:** A modification to the main data where US cases are removed.
 - **Geocoded:** A parsed version of the main data with a geocoded field allowing for a nice visualization with googleVis.
