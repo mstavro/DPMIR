@@ -1,5 +1,6 @@
 # Repository for Replication of "Does Police Militarization Increase Repression?"
 Replication data for the paper "Does Police Militarization Increase Repression?"
+
 DOI: [10.1177/00220027231187301](https://doi.org/10.1177/00220027231187301)
 
 Authors:
