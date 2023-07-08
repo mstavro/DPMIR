@@ -3,7 +3,7 @@ Replication data for the paper "Does Police Militarization Increase Repression?"
 
 Authors:
 - Martin Stavro [![Orcid ID](https://orcid.org/sites/default/files/images/orcid_16x16.png)](https://orcid.org/0000-0002-7527-9582)
-- Dr. Ryan Welch
+- Dr. Ryan Welch [![Orcid ID](https://orcid.org/sites/default/files/images/orcid_16x16.png)](https://orcid.org/0000-0001-7012-2538)
 
 This document contains instructions on how to replicate the analyses from "Does Police Militarization Increase Repression?" Viewing the commit history also provides a record on how the analyses changed over time (model refinements, debugging, etc.).
 
